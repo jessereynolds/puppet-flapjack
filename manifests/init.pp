@@ -1,6 +1,7 @@
 # == Class: flapjack
 #
-# Full description of class flapjack here.
+# This module installs and configures flapjack from the flapjack-omnibus package.
+# See http://flapjack.io/ for more information on flapjack.
 #
 # === Parameters
 #
@@ -29,13 +30,32 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Jesse Reynolds (@jessereynolds)
 #
 # === Copyright
 #
-# Copyright 2013 Your name here, unless otherwise noted.
+# Copyright 2013 Jesse Reynolds
 #
+
 class flapjack {
 
+  package {'flapjack':
+    ensure => $version,
+    before => File['/etc/flapjack/flapjack_config.yml'],
+  }
+
+  file {'/etc/flapjack/flapjack_config.yml':
+    ensure  => file,
+    owner   => 'flapjack',
+    #content => template('flapjack/flapjack_config.yml.erb'),
+    content => "foo",
+  }
+
+  service {'flapjack':
+    ensure    => running,
+    enable    => true,
+    subscribe => File['/etc/flapjack/flapjack_config.yml'],
+  }
 
 }
+
